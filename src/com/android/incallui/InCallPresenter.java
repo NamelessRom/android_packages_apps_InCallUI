@@ -20,6 +20,12 @@
 
 package com.android.incallui;
 
+<<<<<<< HEAD
+=======
+import android.telephony.MSimTelephonyManager;
+
+import com.android.incallui.service.PhoneNumberService;
+>>>>>>> 48cdd91... DSDA: Add InCallUI DSDA support.
 import com.google.android.collect.Sets;
 import com.google.common.base.Preconditions;
 
@@ -179,6 +185,11 @@ public class InCallPresenter implements CallList.Listener {
 
         final boolean doFinish = (mInCallActivity != null && isActivityStarted());
         Log.i(this, "Hide in call UI: " + doFinish);
+
+        if ((mCallList != null) && !(mCallList.existsLiveCall(mCallList.getActiveSubscription()))
+                && mCallList.switchToOtherActiveSubscription()) {
+            return;
+        }
 
         if (doFinish) {
             mInCallActivity.finish();
@@ -358,6 +369,11 @@ public class InCallPresenter implements CallList.Listener {
             listener.onStateChange(mInCallState, callList);
         }
 
+        if (MSimTelephonyManager.getDefault().getMultiSimConfiguration()
+                == MSimTelephonyManager.MultiSimVariants.DSDA && (mInCallActivity != null)) {
+            mInCallActivity.updateDsdaTab();
+        }
+
         if (isActivityStarted()) {
             final boolean hasCall = callList.getActiveOrBackgroundCall() != null ||
                     callList.getOutgoingCall() != null;
@@ -390,6 +406,11 @@ public class InCallPresenter implements CallList.Listener {
 
         for (IncomingCallListener listener : mIncomingCallListeners) {
             listener.onIncomingCall(mInCallState, call);
+        }
+
+        if (MSimTelephonyManager.getDefault().getMultiSimConfiguration()
+                == MSimTelephonyManager.MultiSimVariants.DSDA && (mInCallActivity != null)) {
+            mInCallActivity.updateDsdaTab();
         }
     }
 
@@ -857,7 +878,12 @@ public class InCallPresenter implements CallList.Listener {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                 | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS
                 | Intent.FLAG_ACTIVITY_NO_USER_ACTION);
-        intent.setClass(mContext, InCallActivity.class);
+        if (MSimTelephonyManager.getDefault().getMultiSimConfiguration()
+                == MSimTelephonyManager.MultiSimVariants.DSDA) {
+            intent.setClass(mContext, MSimInCallActivity.class);
+        } else {
+            intent.setClass(mContext, InCallActivity.class);
+        }
         if (showDialpad) {
             intent.putExtra(InCallActivity.SHOW_DIALPAD_EXTRA, true);
         }
