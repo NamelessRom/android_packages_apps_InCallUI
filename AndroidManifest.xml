@@ -31,6 +31,6 @@
     -->
     <application
         android:persistent="true"
-        android:hasCode="false"
-        />
+        android:hasCode="false" />
+
 </manifest>

@@ -809,6 +809,18 @@ public class InCallPresenter implements CallList.Listener {
     }
 
     /**
+     * Starts the incoming call Ui immediately used by the incoming call
+     * notification sent from framework's notification mechanism
+     */
+    public void startIncomingCallUi() {
+        // Update the notification and UI this time with fullscreen intent
+        // First cancel the actual notification and then update
+        mStatusBarNotifier.cancelInCall();
+        mStatusBarNotifier.updateNotificationAndLaunchIncomingCallUi(
+                InCallState.INCALL, mCallList, false);
+    }
+
+    /**
      * Checks to see if both the UI is gone and the service is disconnected. If so, tear it all
      * down.
      */
