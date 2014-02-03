@@ -60,7 +60,7 @@ public class InCallCardActivity extends Activity {
         answer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                InCallPresenter.getInstance().startIncomingCallUi(InCallPresenter.InCallState.INCALL, false);
+                InCallPresenter.getInstance().startIncomingCallUi(InCallPresenter.InCallState.INCALL);
                 CallCommandClient.getInstance().answerCall(mCall.getCallId());
                 finish();
             }
@@ -84,15 +84,6 @@ public class InCallCardActivity extends Activity {
 
         // Lookup contact info
         startContactInfoSearch(identification);
-    }
-
-    @Override
-    public void onBackPressed() {
-        final Call call = CallList.getInstance().getIncomingCall();
-        if (call != null) {
-            InCallPresenter.getInstance().startIncomingCallUi(InCallPresenter.InCallState.INCALL, true);
-        }
-        super.onBackPressed();
     }
 
     /**
@@ -119,6 +110,7 @@ public class InCallCardActivity extends Activity {
                 }
             });
     }
+
 
 }
 
