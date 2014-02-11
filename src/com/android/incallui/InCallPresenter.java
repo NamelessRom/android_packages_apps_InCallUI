@@ -392,7 +392,7 @@ public class InCallPresenter implements CallList.Listener {
 
         // Enable the soft navigation buttons
         // on new incoming call as long it is no background call
-        if (newState.isIncoming() && !mCallUiInBackground) {
+        if (newState.isIncoming()) {
             CallCommandClient.getInstance().setSystemBarNavigationEnabled(true);
             if (mAccelerometerListener != null) {
                 mAccelerometerListener.enableSensor(true);
