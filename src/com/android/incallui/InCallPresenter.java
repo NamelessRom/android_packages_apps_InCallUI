@@ -386,8 +386,10 @@ public class InCallPresenter implements CallList.Listener {
 
         // Disable notification shade and soft navigation buttons
         // on new incoming call as long it is no background call
-        if (newState.isIncoming() && !mCallUiInBackground) {
-            CallCommandClient.getInstance().setSystemBarNavigationEnabled(false);
+        if (newState.isIncoming()) {
+            if (!mCallUiInBackground) {
+                CallCommandClient.getInstance().setSystemBarNavigationEnabled(false);
+            }
         }
 
         for (IncomingCallListener listener : mIncomingCallListeners) {
@@ -796,6 +798,18 @@ public class InCallPresenter implements CallList.Listener {
 
         mStatusBarNotifier.updateNotificationAndLaunchIncomingCallUi(
                 inCallState, mCallList, mCallUiInBackground);
+    }
+
+    /**
+     * Starts the incoming call Ui immediately used by the incoming call
+     * notification sent from framework's notification mechanism
+     */
+    public void startIncomingCallUi() {
+        // Update the notification and UI this time with fullscreen intent
+        // First cancel the actual notification and then update
+        mStatusBarNotifier.cancelInCall();
+        mStatusBarNotifier.updateNotificationAndLaunchIncomingCallUi(
+                InCallState.INCALL, mCallList, false);
     }
 
     /**
