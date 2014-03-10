@@ -393,7 +393,6 @@ public class InCallPresenter implements CallList.Listener {
         // Disable notification shade and enable soft navigation buttons
         // on new incoming call as long it is no background call
         if (newState.isIncoming()) {
-            if (!mCallUiInBackground) {
                 CallCommandClient.getInstance().setSystemBarNavigationEnabled(true);
             }
             if (mAccelerometerListener != null) {
