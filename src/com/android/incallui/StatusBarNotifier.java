@@ -350,6 +350,16 @@ public class StatusBarNotifier implements InCallPresenter.InCallStateListener {
             addHangupAction(builder);
         }
 
+        // Add dismiss and answer button for any incoming call
+        if (state == Call.State.INCOMING) {
+            addAnswerAction(builder);
+            addDismissAction(builder);
+            if (!allowFullScreenIntent || mIsCallUiInBackground) {
+                // Call UI not active - set statusbar text
+                builder.setTicker(contentTitle);
+            }
+        }
+
         /*
          * Fire off the notification
          */
