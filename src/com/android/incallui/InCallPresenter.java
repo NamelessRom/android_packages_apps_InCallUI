@@ -390,10 +390,10 @@ public class InCallPresenter implements CallList.Listener {
         Log.i(this, "Phone switching state: " + mInCallState + " -> " + newState);
         mInCallState = newState;
 
-        // Disable notification shade and soft navigation buttons
-        // on new incoming call as long it is no background call
-        if (newState.isIncoming() && !mCallUiInBackground) {
-            CallCommandClient.getInstance().setSystemBarNavigationEnabled(false);
+        // Disable notification shade on new incoming call
+        // as long it is no background call
+        if (newState.isIncoming()) {
+            CallCommandClient.getInstance().setSystemBarNavigationEnabled(true);
             if (mAccelerometerListener != null) {
                 mAccelerometerListener.enableSensor(true);
             }
