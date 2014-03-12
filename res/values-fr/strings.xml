@@ -626,4 +626,32 @@
     <string name="preference_category_ringtone" msgid="5197960752529332721">"Sonnerie et vibreur"</string>
     <string name="manageConferenceLabel" msgid="4691922394301969053">"Gérer la conférence téléphonique"</string>
     <string name="emergency_call_dialog_number_for_display" msgid="8373041754188879871">"Numéro d\'urgence"</string>
+	
+    <string name="accept_modify_call_request_prompt">Accepter la demande de modifier l\'appel?</string>
+	<string name="callFailed_dialToDial">Demande de DIAL modifié pour le DIAL avec un numéro différent.</string>
+    <string name="callFailed_dialToSs">Demande de DIAL modifié à la demande de SS.</string>
+    <string name="callFailed_dialToUssd">Demande de DIAL modifié à la demande de USSD.</string>
+	<string name="description_direction_down_left">En bas à gauche</string>
+    <string name="description_direction_down_right">En bas à droite</string>
+	<string name="description_direction_up_left">En haut à gauche</string>
+    <string name="description_direction_up_right">En haut à droite</string>
+	<string name="description_target_answer">Répondre</string>
+    <string name="description_target_answer_tx_video">Réponse avec TX vidéo</string>
+    <string name="description_target_decline">Refuser</string>
+    <string name="modify_call_failure_str">Demande de modification de l\'appel a échouée\n</string>
+    <string name="modify_call_option_title">Sélectionner le type d\'appel</string>
+    <string name="modify_call_option_voice">Voix seulement</string>
+    <string name="modify_call_option_vt">VT</string>
+    <string name="modify_call_option_vt_rx">Recevoir la vidéo</string>
+    <string name="modify_call_option_vt_tx">Transmission de la vidéo</string>
+    <string name="modify_call_prompt_no">Non</string>
+    <string name="modify_call_prompt_yes">Oui</string>
+    <string name="onscreenAddParticipant">Ajouter un participant</string>
+    <string name="onscreenModifyCallText">Modifier l\'appel</string>
+	<string name="stk_cc_ss_to_dial_error">Demande SS modifiée à la demande de DIAL.</string>
+    <string name="stk_cc_ss_to_ss_error">Demande SS modifiée à nla nouvelle demande de SS.</string>
+    <string name="stk_cc_ss_to_ussd_error">Demande SS modifiée à la demande de USSD.</string>
+	<string name="upgrade_vt_prompt">Voulez-vous mettre à jour l\'appel à l\'appel vidéo?</string>
+    <string name="upgrade_vt_rx_prompt">Voulez-vous mettre à jour l\'appel vidéo à l\'appel?</string>
+    <string name="vt_init_fail_str">L\'initialisation de la transmission de la vidéo a échouée. Déclassement de l\'appel à la voix sur LTE\n</string>	
 </resources>
