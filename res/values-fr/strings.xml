@@ -194,10 +194,10 @@
     <string name="throttle_time_frame" msgid="1915198770363734685">"Période d\'utilisation des données"</string>
     <string name="throttle_rate" msgid="4710388992676803508">"Règles relatives au taux de transfert des données"</string>
     <string name="throttle_help" msgid="243651091785169900">"En savoir plus"</string>
-    <string name="throttle_status_subtext" msgid="1657318943142085170">"<xliff:g id="USED_0">%1$s</xliff:g> sur <xliff:g id="USED_2">%3$s</xliff:g> - (<xliff:g id="USED_1">%2$d</xliff:g> ٪) du maximum par période\nLa prochaine période démarre dans <xliff:g id="USED_3">%4$d</xliff:g> jours (<xliff:g id="USED_4">%5$s</xliff:g>)."</string>
-    <string name="throttle_data_usage_subtext" msgid="6029276011123694701">"<xliff:g id="USED_0">%1$s</xliff:g> sur <xliff:g id="USED_2">%3$s</xliff:g> - (<xliff:g id="USED_1">%2$d</xliff:g> ٪) du maximum par période"</string>
+    <string name="throttle_status_subtext" msgid="1657318943142085170">"<xliff:g id="USED_0">%1$s</xliff:g> sur <xliff:g id="USED_2">%3$s</xliff:g> - (<xliff:g id="USED_1">%2$d</xliff:g> %) du maximum par période\nLa prochaine période démarre dans <xliff:g id="USED_3">%4$d</xliff:g> jours (<xliff:g id="USED_4">%5$s</xliff:g>)."</string>
+    <string name="throttle_data_usage_subtext" msgid="6029276011123694701">"<xliff:g id="USED_0">%1$s</xliff:g> sur <xliff:g id="USED_2">%3$s</xliff:g> - (<xliff:g id="USED_1">%2$d</xliff:g> %) du maximum par période"</string>
     <string name="throttle_data_rate_reduced_subtext" msgid="7492763592720107737">"<xliff:g id="USED_0">%1$s</xliff:g> maximum dépassé\nTaux de transfert des données réduit à <xliff:g id="USED_1">%2$d</xliff:g> Ko/s"</string>
-    <string name="throttle_time_frame_subtext" msgid="7732763021560399960">"<xliff:g id="USED_0">%1$d</xliff:g> ٪ du cycle écoulé\nLa prochaine période démarre dans <xliff:g id="USED_1">%2$d</xliff:g> jours (<xliff:g id="USED_2">%3$s</xliff:g>)."</string>
+    <string name="throttle_time_frame_subtext" msgid="7732763021560399960">"<xliff:g id="USED_0">%1$d</xliff:g> % du cycle écoulé\nLa prochaine période démarre dans <xliff:g id="USED_1">%2$d</xliff:g> jours (<xliff:g id="USED_2">%3$s</xliff:g>)."</string>
     <string name="throttle_rate_subtext" msgid="2149102656120726855">"Taux de transfert des données réduit à <xliff:g id="USED">%1$d</xliff:g> Ko/s si le plafond d\'utilisation est dépassé"</string>
     <string name="throttle_help_subtext" msgid="5217706521499010816">"Plus d\'informations sur les règles de votre opérateur mobile concernant l\'utilisation des données sur son réseau"</string>
     <string name="cell_broadcast_sms" msgid="5584192824053625842">"Diffusion cellulaire par SMS"</string>
@@ -568,8 +568,8 @@
     <string name="default_preference_summary" msgid="868766740121667450">"&lt;Non défini&gt;"</string>
     <string name="display_name_summary" msgid="8636377460518225523">"&lt;Identique au nom d\'utilisateur&gt;"</string>
     <string name="optional_summary" msgid="1464058793789832411">"&lt;Facultatif&gt;"</string>
-    <string name="advanced_settings_show" msgid="4668880308290857597">"▷ Appuyer ici pour tout afficher"</string>
-    <string name="advanced_settings_hide" msgid="217398292824758079">"▽ Appuyer ici pour tout masquer"</string>
+    <string name="advanced_settings_show" msgid="4668880308290857597">"? Appuyer ici pour tout afficher"</string>
+    <string name="advanced_settings_hide" msgid="217398292824758079">"? Appuyer ici pour tout masquer"</string>
     <string name="empty_alert" msgid="6839103946505432390">"Le champ <xliff:g id="INPUT_FIELD_NAME">%s</xliff:g> est obligatoire."</string>
     <string name="not_a_valid_port" msgid="4796149266434630292">"Le numéro de port doit être compris entre 1000 et 65534."</string>
     <string name="no_internet_available_title" msgid="3327109242858406165">"Pas de connexion Internet"</string>
@@ -626,4 +626,31 @@
     <string name="preference_category_ringtone" msgid="5197960752529332721">"Sonnerie et vibreur"</string>
     <string name="manageConferenceLabel" msgid="4691922394301969053">"Gérer la conférence téléphonique"</string>
     <string name="emergency_call_dialog_number_for_display" msgid="8373041754188879871">"Numéro d\'urgence"</string>
+    <string name="accept_modify_call_request_prompt">Accepter la demande de modifier l\'appel?</string>
+    <string name="callFailed_dialToDial">Demande de DIAL modifié pour le DIAL avec un numéro différent.</string>
+    <string name="callFailed_dialToSs">Demande de DIAL modifié à la demande de SS.</string>
+    <string name="callFailed_dialToUssd">Demande de DIAL modifié à la demande de USSD.</string>
+    <string name="description_direction_down_left">En bas à gauche</string>
+    <string name="description_direction_down_right">En bas à droite</string>
+    <string name="description_direction_up_left">En haut à gauche</string>
+    <string name="description_direction_up_right">En haut à droite</string>
+    <string name="description_target_answer">Répondre</string>
+    <string name="description_target_answer_tx_video">Réponse avec TX vidéo</string>
+    <string name="description_target_decline">Refuser</string>
+    <string name="modify_call_failure_str">Demande de modification de l\'appel a échouée\n</string>
+    <string name="modify_call_option_title">Sélectionner le type d\'appel</string>
+    <string name="modify_call_option_voice">Voix seulement</string>
+    <string name="modify_call_option_vt">VT</string>
+    <string name="modify_call_option_vt_rx">Recevoir la vidéo</string>
+    <string name="modify_call_option_vt_tx">Transmission de la vidéo</string>
+    <string name="modify_call_prompt_no">Non</string>
+    <string name="modify_call_prompt_yes">Oui</string>
+    <string name="onscreenAddParticipant">Ajouter un participant</string>
+    <string name="onscreenModifyCallText">Modifier l\'appel</string>
+    <string name="stk_cc_ss_to_dial_error">Demande SS modifiée à la demande de DIAL.</string>
+    <string name="stk_cc_ss_to_ss_error">Demande SS modifiée à nla nouvelle demande de SS.</string>
+    <string name="stk_cc_ss_to_ussd_error">Demande SS modifiée à la demande de USSD.</string>
+    <string name="upgrade_vt_prompt">Voulez-vous mettre à jour l\'appel à l\'appel vidéo?</string>
+    <string name="upgrade_vt_rx_prompt">Voulez-vous mettre à jour l\'appel vidéo à l\'appel?</string>
+    <string name="vt_init_fail_str">L\'initialisation de la transmission de la vidéo a échouée. Déclassement de l\'appel à la voix sur LTE\n</string>
 </resources>
