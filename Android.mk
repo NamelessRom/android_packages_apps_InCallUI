@@ -16,7 +16,7 @@ LOCAL_JNI_SHARED_LIBRARIES := libvt_jni libimscamera_jni
 LOCAL_REQUIRED_MODULES := libvt_jni libimscamera_jni
 
 LOCAL_PACKAGE_NAME := InCallUI
-LOCAL_CERTIFICATE := shared
+LOCAL_CERTIFICATE := platform
 LOCAL_PRIVELEGED_MODULE := false
 
 include $(BUILD_PACKAGE)
