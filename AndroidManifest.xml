@@ -23,6 +23,11 @@
         package="com.android.incallui"
         coreApp="true" >
 
+    <!-- For our non intrusive stuffs -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.INTERNAL_SYSTEM_WINDOW" />
+    <uses-permission android:name="android.permission.STATUS_BAR_SERVICE" />
+
     <!--
         The real code for InCallUI is included in Dialer. This APK only exists
         to ensure that the com.android.incallui process is marked as persistent

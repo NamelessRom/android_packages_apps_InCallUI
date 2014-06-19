@@ -27,6 +27,7 @@ import android.os.UserHandle;
  * Top-level Application class for the InCall app.
  */
 public class InCallApp extends Application {
+    public static final boolean DEBUG = false;
 
     /**
      * Intent Action used for hanging up the current call from Notification bar. This will
