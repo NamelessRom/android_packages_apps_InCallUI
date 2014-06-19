@@ -22,6 +22,7 @@ package com.android.incallui;
 
 import android.telephony.MSimTelephonyManager;
 
+import com.android.incallui.service.NonIntrusiveService;
 import com.google.android.collect.Sets;
 import com.google.common.base.Preconditions;
 
@@ -69,6 +70,7 @@ public class InCallPresenter implements CallList.Listener {
     private ProximitySensor mProximitySensor;
     private boolean mServiceConnected = false;
     private boolean mCallUiInBackground = false;
+    private NonIntrusiveService mNonIntrusiveService = null;
     private static String LOG_TAG = "InCallPresenter";
     VideoCallManager mVideoCallManager;
 
@@ -178,6 +180,10 @@ public class InCallPresenter implements CallList.Listener {
     }
 
     private void attemptFinishActivity() {
+        if (mNonIntrusiveService != null) {
+            mNonIntrusiveService.stopSelf();
+        }
+
         final boolean doFinish = (mInCallActivity != null && isActivityStarted());
         Log.i(this, "Hide in call UI: " + doFinish);
 
@@ -767,6 +773,15 @@ public class InCallPresenter implements CallList.Listener {
         return newState;
     }
 
+    public void setNonIntrusiveService(final NonIntrusiveService service) {
+        mNonIntrusiveService = service;
+    }
+
+    public Call getIncomingCall() {
+        if (mCallList != null) return mCallList.getIncomingCall();
+        return null;
+    }
+
     private void startUi(InCallState inCallState) {
         final Call incomingCall = mCallList.getIncomingCall();
         final boolean isCallWaiting = (incomingCall != null &&
@@ -796,18 +811,28 @@ public class InCallPresenter implements CallList.Listener {
         mCallUiInBackground = Settings.System.getInt(mContext.getContentResolver(),
                 Settings.System.CALL_UI_IN_BACKGROUND, 0) == 1;
 
-        if (mCallUiInBackground) {
-            // get power service to check later if screen is on
-            final PowerManager pm = (PowerManager) mContext.getSystemService(Context.POWER_SERVICE);
-            // check if keyguard is currently shown
-            final IWindowManager windowManagerService = IWindowManager.Stub.asInterface(
-                    ServiceManager.getService(Context.WINDOW_SERVICE));
-            boolean isKeyguardShowing = false;
-            try {
-                isKeyguardShowing = windowManagerService.isKeyguardLocked();
-            } catch (RemoteException e) {
+        final PowerManager pm = (PowerManager) mContext.getSystemService(Context.POWER_SERVICE);
+        if (pm.isScreenOn()) {
+            if (false) {
+                // check if keyguard is currently shown
+                final IWindowManager windowManagerService = IWindowManager.Stub.asInterface(
+                        ServiceManager.getService(Context.WINDOW_SERVICE));
+                boolean isKeyguardShowing = false;
+                try {
+                    isKeyguardShowing = windowManagerService.isKeyguardLocked();
+                } catch (RemoteException ignored) { }
+                mCallUiInBackground = !isKeyguardShowing;
+            } else {
+                // TODO: make it configurable
+                final boolean mNonIntrusiveUi = true;
+                if (mNonIntrusiveUi) {
+                    Log.d(this, "starting nonintrusive service");
+                    final Intent intent = new Intent(mContext, NonIntrusiveService.class);
+                    intent.setAction(NonIntrusiveService.ACTION_START);
+                    mContext.startService(intent);
+                    return;
+                }
             }
-            mCallUiInBackground = pm.isScreenOn() && !isKeyguardShowing;
         }
 
         mStatusBarNotifier.updateNotificationAndLaunchIncomingCallUi(
