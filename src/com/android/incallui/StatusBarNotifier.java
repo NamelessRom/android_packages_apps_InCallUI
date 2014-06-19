@@ -49,7 +49,7 @@ public class StatusBarNotifier implements InCallPresenter.InCallStateListener {
         enum State {
             SCHEDULED,
             FIRED,
-            CLEAR;
+            CLEAR
         }
         State getState();
         void schedule();

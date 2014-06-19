@@ -20,23 +20,22 @@
 
 package com.android.incallui;
 
-import android.telephony.MSimTelephonyManager;
-
-import com.google.android.collect.Sets;
-import com.google.common.base.Preconditions;
-
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ActivityNotFoundException;
-import android.provider.Settings;
 import android.os.PowerManager;
 import android.os.RemoteException;
 import android.os.ServiceManager;
+import android.provider.Settings;
+import android.telephony.MSimTelephonyManager;
 import android.view.IWindowManager;
 
+import com.android.incallui.service.NonIntrusiveService;
 import com.android.services.telephony.common.Call;
 import com.android.services.telephony.common.Call.Capabilities;
 import com.android.services.telephony.common.CallDetails;
+import com.google.android.collect.Sets;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
@@ -55,21 +54,22 @@ public class InCallPresenter implements CallList.Listener {
 
     private static InCallPresenter sInCallPresenter;
 
-    private final Set<InCallStateListener> mListeners = Sets.newHashSet();
+    private final Set<InCallStateListener>        mListeners             = Sets.newHashSet();
     private final ArrayList<IncomingCallListener> mIncomingCallListeners = Lists.newArrayList();
 
     private AudioModeProvider mAudioModeProvider;
     private StatusBarNotifier mStatusBarNotifier;
-    private ContactInfoCache mContactInfoCache;
-    private Context mContext;
-    private CallList mCallList;
-    private InCallActivity mInCallActivity;
+    private ContactInfoCache  mContactInfoCache;
+    private Context           mContext;
+    private CallList          mCallList;
+    private InCallActivity    mInCallActivity;
     private InCallState mInCallState = InCallState.NO_CALLS;
     private AccelerometerListener mAccelerometerListener;
-    private ProximitySensor mProximitySensor;
-    private boolean mServiceConnected = false;
-    private boolean mCallUiInBackground = false;
-    private static String LOG_TAG = "InCallPresenter";
+    private ProximitySensor       mProximitySensor;
+    private        boolean             mServiceConnected    = false;
+    private        boolean             mCallUiInBackground  = false;
+    private        NonIntrusiveService mNonIntrusiveService = null;
+    private static String              LOG_TAG              = "InCallPresenter";
     VideoCallManager mVideoCallManager;
 
     /**
@@ -81,20 +81,21 @@ public class InCallPresenter implements CallList.Listener {
      * 0 => No consent required
      * eg. from VOLTE to VT-TX, consent is needed so
      * row 0, col 1 is set to 1
-     *
+     * <p/>
      * User consent is needed for all upgrades and not
      * needed for downgrades
-     *
-     *         VOLTE     VT-TX      VT-RX      VT
+     * <p/>
+     * VOLTE     VT-TX      VT-RX      VT
      * VOLTE |   0    |    1   |     1   |     1
      * VT-TX |   0    |    0   |     1   |     1
      * VT-RX |   0    |    1   |     0   |     1
      * VT    |   0    |    0   |     0   |     0
      */
-    private int[][] mVideoConsentTable = {{0, 1, 1, 1},
-                                          {0, 0, 1, 1},
-                                          {0, 1, 0, 1},
-                                          {0, 0, 0, 0}};
+    private int[][] mVideoConsentTable = {
+            {0, 1, 1, 1},
+            {0, 0, 1, 1},
+            {0, 1, 0, 1},
+            {0, 0, 0, 0}};
 
     /**
      * Is true when the activity has been previously started. Some code needs to know not just if
@@ -178,6 +179,10 @@ public class InCallPresenter implements CallList.Listener {
     }
 
     private void attemptFinishActivity() {
+        if (mNonIntrusiveService != null) {
+            mNonIntrusiveService.stopSelf();
+        }
+
         final boolean doFinish = (mInCallActivity != null && isActivityStarted());
         Log.i(this, "Hide in call UI: " + doFinish);
 
@@ -194,7 +199,7 @@ public class InCallPresenter implements CallList.Listener {
     /**
      * Sends modify call request to the other party.
      *
-     * @param callId id of the call to modify.
+     * @param callId   id of the call to modify.
      * @param callType Proposed call type.
      */
     public void sendModifyCallRequest(int callId, int callType) {
@@ -213,7 +218,7 @@ public class InCallPresenter implements CallList.Listener {
      * Accepts/Rejects modify call request.
      *
      * @param accept true if the proposed call type is accepted, false otherwise.
-     * @param call Call which call type change to be confirmed/rejected.
+     * @param call   Call which call type change to be confirmed/rejected.
      */
     public void modifyCallConfirm(boolean accept, Call call) {
         log("VideoCall: ModifyCallConfirm: accept=" + accept + " call=" + call);
@@ -348,9 +353,9 @@ public class InCallPresenter implements CallList.Listener {
         // Renable notification shade and soft navigation buttons, if we are no longer in the
         // incoming call screen
         if (!newState.isIncoming()) {
-                if(mAccelerometerListener != null) {
-                    mAccelerometerListener.enableSensor(false);
-                }
+            if (mAccelerometerListener != null) {
+                mAccelerometerListener.enableSensor(false);
+            }
             CallCommandClient.getInstance().setSystemBarNavigationEnabled(true);
         }
 
@@ -395,8 +400,8 @@ public class InCallPresenter implements CallList.Listener {
         // as long it is no background call
         if (newState.isIncoming()) {
             CallCommandClient.getInstance().setSystemBarNavigationEnabled(true);
-            if(mAccelerometerListener != null) {
-                    mAccelerometerListener.enableSensor(true);
+            if (mAccelerometerListener != null) {
+                mAccelerometerListener.enableSensor(true);
             }
         }
 
@@ -573,6 +578,7 @@ public class InCallPresenter implements CallList.Listener {
 
     /**
      * Handles the green CALL key while in-call.
+     *
      * @return true if we consumed the event.
      */
     public boolean handleCallKey() {
@@ -592,8 +598,7 @@ public class InCallPresenter implements CallList.Listener {
         // (1) Attempt to answer a call
         if (incomingCall != null) {
             CallCommandClient.getInstance().answerCall(incomingCall.getCallId());
-            if(mAccelerometerListener != null)
-                    mAccelerometerListener.enableSensor(false);
+            if (mAccelerometerListener != null) { mAccelerometerListener.enableSensor(false); }
             return true;
         }
 
@@ -767,6 +772,15 @@ public class InCallPresenter implements CallList.Listener {
         return newState;
     }
 
+    public void setNonIntrusiveService(final NonIntrusiveService service) {
+        mNonIntrusiveService = service;
+    }
+
+    public Call getIncomingCall() {
+        if (mCallList != null) return mCallList.getIncomingCall();
+        return null;
+    }
+
     private void startUi(InCallState inCallState) {
         final Call incomingCall = mCallList.getIncomingCall();
         final boolean isCallWaiting = (incomingCall != null &&
@@ -796,18 +810,29 @@ public class InCallPresenter implements CallList.Listener {
         mCallUiInBackground = Settings.System.getInt(mContext.getContentResolver(),
                 Settings.System.CALL_UI_IN_BACKGROUND, 0) == 1;
 
-        if (mCallUiInBackground) {
-            // get power service to check later if screen is on
-            final PowerManager pm = (PowerManager) mContext.getSystemService(Context.POWER_SERVICE);
+        final PowerManager pm = (PowerManager) mContext.getSystemService(Context.POWER_SERVICE);
+        if (pm.isScreenOn()) {
             // check if keyguard is currently shown
             final IWindowManager windowManagerService = IWindowManager.Stub.asInterface(
                     ServiceManager.getService(Context.WINDOW_SERVICE));
             boolean isKeyguardShowing = false;
             try {
                 isKeyguardShowing = windowManagerService.isKeyguardLocked();
-            } catch (RemoteException e) {
+            } catch (RemoteException ignored) { }
+            if (mCallUiInBackground) {
+                mCallUiInBackground = !isKeyguardShowing;
+            } else {
+                final boolean nonIntrusiveUi = Settings.Nameless.getBoolean(
+                        mContext.getContentResolver(), Settings.Nameless.NON_INTRUSIVE_UI,
+                        true) && !isKeyguardShowing;
+                if (nonIntrusiveUi) {
+                    Log.d(this, "starting nonintrusive service");
+                    final Intent intent = new Intent(mContext, NonIntrusiveService.class);
+                    intent.setAction(NonIntrusiveService.ACTION_START);
+                    mContext.startService(intent);
+                    return;
+                }
             }
-            mCallUiInBackground = pm.isScreenOn() && !isKeyguardShowing;
         }
 
         mStatusBarNotifier.updateNotificationAndLaunchIncomingCallUi(
@@ -969,7 +994,7 @@ public class InCallPresenter implements CallList.Listener {
     }
 
     private void onPhoneStateChange(InCallState newState, InCallState oldState) {
-        if ( newState != oldState) {
+        if (newState != oldState) {
             initMediaHandler(newState);
         }
     }
