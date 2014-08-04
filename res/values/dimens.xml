@@ -140,4 +140,7 @@
 
     <!-- Height of the in-call card -->
     <dimen name="incoming_call_card_height">112dip</dimen>
+
+    <!-- Size of call recorder progress timer text -->
+    <dimen name="recording_progress_text_size">64dp</dimen>
 </resources>
